@@ -1,19 +1,38 @@
 import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import {User} from "./users.model";
 import {InjectModel} from "@nestjs/sequelize";
-import {CreateUserDto} from "./dto/create-users.dto";
+import {CreateUserDto} from "./dto/create-user.dto";
 import {RolesService} from "../roles/roles.service";
-import {AddRoleDto} from "./dto/add-role-dto";
 import {BanUserDto} from "./dto/ban-user.dto";
+import { UpdateUserDto } from "./dto/update-user.dto";
+import { AddRoleDto } from "./dto/add-role-dto";
+import { FilesService } from "../files/files.service";
 
 @Injectable()
 export class UsersService {
 
     constructor(@InjectModel(User) private userRepository: typeof User,
-                private roleService: RolesService) {}
+                private roleService: RolesService,
+                private fileService: FilesService,
+                ) {}
+
+    async updateProfile(userId:number, dto: UpdateUserDto, avatar: any) {
+        const fileName = await this.fileService.saveAvatar(avatar);
+        const [rowsUpdated, [updatedUser]] = await this.userRepository.update({ ...dto, avatar:fileName },
+          {where:{ id:userId }, returning: true})
+        return updatedUser;
+    }
+
+    async activate(activationLink: string){
+        const user = await this.userRepository.findOne({where:{activationLink}});
+        user.isActivated = true
+        await user.save()
+        return user;
+
+    }
+
 
     async createUser(dto: CreateUserDto, activationLink: string){
-
         const user = await this.userRepository.create({...dto, activationLink:activationLink});
         const role = await this.roleService.getRoleByValue('USER')
         await user.$set('roles', [role.id])
@@ -53,4 +72,6 @@ export class UsersService {
         await user.save();
         return user;
     }
+
+
 }

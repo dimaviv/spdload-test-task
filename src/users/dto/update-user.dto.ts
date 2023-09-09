@@ -13,10 +13,5 @@ export class UpdateUserDto {
     @MinDate(new Date('1900-01-01'), { message: 'Date of birth is too early' })
     @MaxDate(new Date(), { message: 'Date of birth is in the future' })
     readonly dateOfBirth?: Date;
-    @ApiProperty({example:'2002-12-18', description:'Date of birth'})
-    @IsOptional()
-    @IsDate({ message: 'Invalid date format' })
-    @MinDate(new Date('1900-01-01'), { message: 'Date of birth is too early' })
-    @MaxDate(new Date(), { message: 'Date of birth is in the future' })
-    readonly avatar?: string;
+
 }

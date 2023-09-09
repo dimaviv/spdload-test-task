@@ -12,12 +12,11 @@ import {Post} from "./posts/posts.model";
 import { FilesModule } from './files/files.module';
 import {ServeStaticModule} from "@nestjs/serve-static";
 import * as path from "path";
-import { MailService } from './mail/mail.service';
 import { MailModule } from './mail/mail.module';
 
 @Module({
     controllers: [],
-    providers: [MailService],
+    providers: [],
     imports: [
         ConfigModule.forRoot({
             envFilePath: `.${process.env.NODE_ENV}.env`

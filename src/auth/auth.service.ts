@@ -4,7 +4,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from "@nestjs/common";
-import { CreateUserDto } from "../users/dto/create-users.dto";
+import { CreateUserDto } from "../users/dto/create-user.dto";
 import { UsersService } from "../users/users.service";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from "bcryptjs";
@@ -38,12 +38,13 @@ export class AuthService {
     }
     const hashPassword = await bcrypt.hash(userDto.password, 5);
     const activationLink =  await uuidv4()
+
     const user = await this.userService.createUser({
       ...userDto,
       password: hashPassword
     }, activationLink);
-
-    await this.mailService.sendActivationMail(user.email, user.activationLink)
+    const activationURL = process.env.API_URL+'users/activate/' + activationLink
+    await this.mailService.sendActivationMail(user.email, activationURL)
     return this.generateToken(user);
   }
 

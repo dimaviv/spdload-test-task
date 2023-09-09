@@ -17,12 +17,12 @@ export class MailService {
         })
     }
 
-    async sendActivationMail(email: string, verificationLink: string): Promise<void> {
+    async sendActivationMail(email: string, activationUrl: string): Promise<void> {
         const mailOptions = {
             from: process.env.SMTP_USER,
             to: email,
             subject: 'Email Verification',
-            html: `<p>Please click the following link to verify your email: <a href="${verificationLink}">${verificationLink}</a></p>`,
+            html: `<p>Please click the following link to verify your email: <a href="${activationUrl}">${activationUrl}</a></p>`,
         };
 
         await this.transporter.sendMail(mailOptions);
