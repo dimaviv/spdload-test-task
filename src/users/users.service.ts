@@ -17,9 +17,14 @@ export class UsersService {
                 ) {}
 
     async updateProfile(userId:number, dto: UpdateUserDto, avatar: any) {
-        const fileName = await this.fileService.saveAvatar(avatar);
-        const [rowsUpdated, [updatedUser]] = await this.userRepository.update({ ...dto, avatar:fileName },
+        let updateObj = {...dto, avatar:undefined};
+        if (avatar) {
+            const fileName = await this.fileService.saveAvatar(avatar);
+            updateObj.avatar = fileName
+        }
+        const [rowsUpdated, [updatedUser]] = await this.userRepository.update({ ...updateObj },
           {where:{ id:userId }, returning: true})
+
         return updatedUser;
     }
 

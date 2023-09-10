@@ -22,7 +22,7 @@ import { UpdateUserDto } from "./dto/update-user.dto";
 
 @ApiTags('Users')
 @Controller('users')
-@ApiBearerAuth()
+@ApiBearerAuth('Authorization')
 export class UsersController {
 
     constructor(private usersService: UsersService) {}
@@ -50,6 +50,7 @@ export class UsersController {
     @UseInterceptors(FileInterceptor('avatar'))
     update(@Req() req, @Body() dto: UpdateUserDto, @UploadedFile() avatar){
         const userId = req.user.id;
+        console.log(dto);
         return this.usersService.updateProfile(userId, dto, avatar)
     }
 

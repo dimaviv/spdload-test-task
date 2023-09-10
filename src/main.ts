@@ -12,7 +12,7 @@ async function start() {
         .setTitle('SpdLoad test task')
         .setDescription('REST API documentation')
         .setVersion('1.0.0')
-        .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' }, 'jwt')
+        .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' }, 'Authorization')
         .build()
     const document = SwaggerModule.createDocument(app, config)
     SwaggerModule.setup('api/docs', app, document)
